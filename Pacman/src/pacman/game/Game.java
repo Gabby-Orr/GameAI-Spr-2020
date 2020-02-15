@@ -648,6 +648,7 @@ public final class Game
 					ghost.currentNodeIndex=currentMaze.graph[ghost.currentNodeIndex].neighbourhood.get(ghost.lastMoveMade);
 					reversed=true;
 					timeOfLastGlobalReversal = totalTime;
+					System.out.println("REVERSING GHOSTS");
 				}
 			}
 		}
