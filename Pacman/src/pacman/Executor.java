@@ -21,6 +21,8 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 import pacman.game.GameView;
+import pacman.controllers.examples.Legacy2TheReckoning;
+import pacman.controllers.examples.StarterPacMan;
 
 /**
  * This class may be used to execute the game in timed or un-timed modes, with or without
@@ -60,6 +62,7 @@ public class Executor
 //		exec.runGameTimed(new StarterPacMan(),new StarterGhosts(),visual);
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(),visual);	
 		exec.runGameTimed(new HumanController(new KeyBoardInput()),new OrrGhosts(),visual);	
+//		exec.runGameTimed(new HumanController(new KeyBoardInput()),new Legacy2TheReckoning(),visual);
 		//*/
 		
 		/*
