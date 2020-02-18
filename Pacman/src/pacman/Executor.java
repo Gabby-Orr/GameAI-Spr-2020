@@ -61,8 +61,9 @@ public class Executor
 //		exec.runGameTimed(new NearestPillPacMan(),new AggressiveGhosts(),visual);
 //		exec.runGameTimed(new StarterPacMan(),new StarterGhosts(),visual);
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(),visual);	
-		exec.runGameTimed(new HumanController(new KeyBoardInput()),new OrrGhosts(),visual);	
+//		exec.runGameTimed(new HumanController(new KeyBoardInput()),new OrrGhosts(),visual);	
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()),new Legacy2TheReckoning(),visual);
+		exec.runGameTimed(new StarterPacMan(),new OrrGhosts(),visual);
 		//*/
 		
 		/*

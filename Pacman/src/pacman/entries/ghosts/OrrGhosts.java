@@ -30,8 +30,6 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 		myMoves.clear();
 
-//		mode = Mode(game, prevTimeDue);
-
 		if (targetIndex.isEmpty()) {
 			targetIndex.put(GHOST.BLINKY, game.getPowerPillIndices()[1]); // TOP-RIGHT
 			targetIndex.put(GHOST.INKY, game.getPowerPillIndices()[3]); // BOTTOM-RIGHT
@@ -39,8 +37,8 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 			targetIndex.put(GHOST.SUE, game.getPowerPillIndices()[2]); // BOTTOM-LEFT
 		}
 
-//		GameView.addPoints(game, Color.CYAN, game.getPowerPillIndices()[2]);
-//		GameView.addPoints(game,Color.GREEN,1);
+//		GameView.addPoints(game, Color.CYAN, game.getPowerPillIndices()[330]);
+		GameView.addPoints(game,Color.CYAN,305,  335);
 
 		for (GHOST ghost : GHOST.values()) // for each ghost
 		{
@@ -81,7 +79,6 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 		FRIGHTENED, SCATTER, CHASE
 	};
 
-	// TODO: may take out, bc framework takes care of frightened mode
 	public void Frighten(GHOST ghost) {
 		System.out.println("ahh, frightened mode");
 	}
@@ -90,14 +87,11 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 		int currentIndex = game.getGhostCurrentNodeIndex(ghost);
 		int pacManIndex = game.getPacmanCurrentNodeIndex();
 
-		// if (ghost.equals(GHOST.BLINKY && ghost house is empty){
-		// go to PM
-		// else
-		// go to target
-		// } else {
-		return game.getApproximateNextMoveTowardsTarget(currentIndex, targetIndex.get(ghost),
-				game.getGhostLastMoveMade(ghost), DM.PATH);
-		// }
+		if (!(ghost.equals(GHOST.BLINKY) && isGhostHouseEmpty(game)))
+			return game.getApproximateNextMoveTowardsTarget(currentIndex, targetIndex.get(ghost),
+					game.getGhostLastMoveMade(ghost), DM.PATH);
+		else
+			return getChaseActions(game, ghost);
 	}
 
 	// TODO: see if you need break; or not
@@ -131,27 +125,8 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 		case PINKY:
 			System.out.println("pinky chase");
 			// target 4 ahead (if left, down, or up)
-			// TODO: MAKE RECURSIVE
-			pacMv1 = game.getNeighbour(pacManIndex, game.getPacmanLastMoveMade());
-			if (pacMv1 == -1)
-				target = pacManIndex;
-			else {
-				pacMv2 = game.getNeighbour(pacMv1, game.getPacmanLastMoveMade());
-				if (pacMv2 == -1)
-					target = pacMv1;
-				else {
-					pacMv3 = game.getNeighbour(pacMv2, game.getPacmanLastMoveMade());
-					if (pacMv3 == -1)
-						target = pacMv2;
-					else {
-						pacMv4 = game.getNeighbour(pacMv3, game.getPacmanLastMoveMade());
-						if (pacMv4 == -1)
-							target = pacMv3;
-						else
-							target = pacMv4;
-					}
-				}
-			}
+			target = tilesAheadOfPacman(game, 4, pacManIndex);
+			System.out.println(target + "  " + pacManIndex);
 			break;
 
 		case SUE:
@@ -159,20 +134,6 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 			// if (PM > 8 tiles away)
 			// Target PM current tile
 			// else
-			pacMv1 = game.getNeighbour(pacManIndex, game.getPacmanLastMoveMade());
-			pacMv2 = game.getNeighbour(pacMv1, game.getPacmanLastMoveMade());
-			pacMv3 = game.getNeighbour(pacMv2, game.getPacmanLastMoveMade());
-			pacMv4 = game.getNeighbour(pacMv3, game.getPacmanLastMoveMade());
-			if (pacMv4 != -1)
-				target = pacMv4;
-			else if (pacMv3 != -1)
-				target = pacMv3;
-			else if (pacMv2 != -1)
-				target = pacMv2;
-			else if (pacMv1 != -1)
-				target = pacMv1;
-			else
-				target = pacManIndex;
 			// scatter target (bottom-left)
 			if (game.getShortestPathDistance(currentIndex, pacManIndex, game.getGhostLastMoveMade(ghost)) > 8)
 				target = pacManIndex;
@@ -187,4 +148,18 @@ public class OrrGhosts extends Controller<EnumMap<GHOST, MOVE>> {
 				DM.PATH);
 	}
 
+	private Boolean isGhostHouseEmpty(Game game) {
+		int t = 0;
+		for (GHOST ghost : GHOST.values())
+			t += game.getGhostLairTime(ghost);
+		return t == 0;
+	}
+
+	private int tilesAheadOfPacman(Game game, int tiles, int currentIndex) {
+		int nxtSpace = game.getNeighbour(currentIndex, game.getPacmanLastMoveMade());
+		if (nxtSpace == -1 || tiles==-1)
+			return currentIndex;
+		else
+			return tilesAheadOfPacman(game, tiles - 1, nxtSpace);
+	}
 }
